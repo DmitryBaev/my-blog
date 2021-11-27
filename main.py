@@ -13,7 +13,7 @@ from functools import wraps
 import os
 from dotenv import load_dotenv
 
-load_dotenv("/.env")
+load_dotenv("venv/.env")
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 ckeditor = CKEditor(app)
