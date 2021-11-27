@@ -13,9 +13,9 @@ from functools import wraps
 import os
 from dotenv import load_dotenv
 
-load_dotenv("/venv/.env")
+load_dotenv(".env")
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['SECRET_KEY'] = os.getenv("KEY")
 ckeditor = CKEditor(app)
 Bootstrap(app)
 login_manager = LoginManager()
