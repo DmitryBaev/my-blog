@@ -7,11 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm, ContactForm
 from flask_gravatar import Gravatar
 from functools import wraps
 import os
 from dotenv import load_dotenv
+import smtplib
 
 load_dotenv(".env")
 app = Flask(__name__)
@@ -20,6 +21,10 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+EMAIL = os.getenv("BOT_EMAIL")
+PASS = os.getenv("BOT_PASS")
+INBOX_EMAIL = os.getenv("MY_EMAIL")
 
 ##CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL1",  "sqlite:///blog.db")
@@ -168,9 +173,24 @@ def about():
     return render_template("about.html", current_user=current_user)
 
 
-@app.route("/contact")
+@app.route('/contact', methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html", current_user=current_user)
+    form = ContactForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        phone = form.phone.data
+        message = form.message.data
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=EMAIL, password=PASS)
+            connection.sendmail(
+                from_addr=EMAIL,
+                to_addrs=INBOX_EMAIL,
+                msg=f"Subject: New blog-contact!\n\nUser: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
+            )
+        return render_template("contact.html", msg_sent=True, current_user=current_user, form=form)
+    return render_template("contact.html", msg_sent=False, current_user=current_user, form=form)
 
 
 @app.route("/new-post", methods=["POST", "GET"])
