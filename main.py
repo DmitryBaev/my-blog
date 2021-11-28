@@ -83,7 +83,7 @@ class Comment(db.Model):
 def admin_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.id != 1:
+        if not current_user.is_authenticated or current_user.id != 1 or current_user.id != 2:
             return abort(403)
         return f(*args, **kwargs)
 
