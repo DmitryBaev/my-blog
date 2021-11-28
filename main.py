@@ -177,18 +177,18 @@ def about():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
-        name = form.name.data
-        email = form.email.data
-        phone = form.phone.data
-        message = form.message.data
-        with smtplib.SMTP("smtp.gmail.com") as connection:
-            connection.starttls()
-            connection.login(user=EMAIL, password=PASS)
-            connection.sendmail(
-                from_addr=EMAIL,
-                to_addrs=INBOX_EMAIL,
-                msg=f"Subject: New blog-contact!\n\nUser: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
-            )
+        # name = form.name.data
+        # email = form.email.data
+        # phone = form.phone.data
+        # message = form.message.data
+        # with smtplib.SMTP("smtp.gmail.com") as connection:
+        #     connection.starttls()
+        #     connection.login(user=EMAIL, password=PASS)
+        #     connection.sendmail(
+        #         from_addr=EMAIL,
+        #         to_addrs=INBOX_EMAIL,
+        #         msg=f"Subject: New blog-contact!\n\nUser: {name}\nEmail: {email}\nPhone: {phone}\nMessage: {message}"
+        #     )
         return render_template("contact.html", msg_sent=True, current_user=current_user, form=form)
     return render_template("contact.html", msg_sent=False, current_user=current_user, form=form)
 
